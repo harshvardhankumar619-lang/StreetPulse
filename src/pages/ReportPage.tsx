@@ -166,15 +166,9 @@ export default function ReportPage() {
       const { data: urlData } = supabase.storage.from('report-photos').getPublicUrl(filePath);
       const photoUrl = urlData.publicUrl;
 
-      // Generate reference number
-      const { data: refData, error: refErr } = await supabase.rpc('generate_reference_number');
-      if (refErr) throw new Error(`Could not generate reference: ${refErr.message}`);
-
-      // Insert report
       const { data: report, error: insertErr } = await supabase
         .from('reports')
         .insert({
-          reference_number: refData as string,
           photo_url: photoUrl,
           latitude: form.lat,
           longitude: form.lng,
